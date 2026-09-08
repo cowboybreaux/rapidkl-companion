@@ -21,18 +21,24 @@ export async function GET() {
   try {
     const response = await fetch(KTM_VEHICLE_POSITIONS_URL, {
       cache: 'no-store',
-      headers: { Accept: 'application/x-protobuf, application/octet-stream' },
+      headers: { 
+        'Accept': 'application/x-protobuf, application/octet-stream',
+        // This User-Agent prevents Vercel from being blocked by government firewalls
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      },
     });
 
     if (!response.ok) {
+      console.error(`Fetch failed: ${response.status} ${response.statusText}`);
       return NextResponse.json(
-        { error: `KTM vehicle feed returned ${response.status}` },
-        { status: 502 },
+        { error: `KTM vehicle feed blocked or down. Status: ${response.status} ${response.statusText}` },
+        { status: response.status === 403 ? 403 : 502 },
       );
     }
 
+    const arrayBuffer = await response.arrayBuffer();
     const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
-      new Uint8Array(await response.arrayBuffer()),
+      new Uint8Array(arrayBuffer),
     );
 
     const vehicles: LiveVehicle[] = feed.entity.flatMap((entity) => {
@@ -63,11 +69,14 @@ export async function GET() {
     return NextResponse.json(vehicles, {
       headers: { 'Cache-Control': 'no-store, max-age=0' },
     });
+    
   } catch (error) {
-    console.error('Unable to decode KTM live vehicle feed:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown decoding error';
+    console.error('Unable to decode KTM live vehicle feed:', errorMessage);
+    
     return NextResponse.json(
-      { error: 'Unable to retrieve live KTM vehicle positions' },
-      { status: 502 },
+      { error: `Unable to process live KTM data: ${errorMessage}` },
+      { status: 500 },
     );
   }
 }
