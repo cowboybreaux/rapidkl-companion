@@ -8,10 +8,15 @@ Valley transit, with three views: **RapidKL Hub**, **KTM Live Map**, and
 
 ```bash
 npm install
+cp .env.example .env.local
 npm run dev
 ```
 
 Open http://localhost:3000.
+
+Set `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` in `.env.local` to enable the live map
+and station map embeds. Enable the Maps JavaScript API and Maps Embed API for
+that key, and restrict it to the app's allowed web origins in Google Cloud.
 
 ```bash
 npm run build && npm run start   # production build

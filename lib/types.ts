@@ -8,6 +8,15 @@ export type LineId =
 
 export type LineOperationalStatus = 'normal' | 'delayed' | 'disrupted';
 
+export type StationLineKey =
+  | 'kelana'
+  | 'ampang'
+  | 'mrt'
+  | 'monorail'
+  | 'putrajaya'
+  | 'ktm-batu'
+  | 'ktm-port';
+
 export interface Line {
   id: LineId;
   status: LineOperationalStatus;
@@ -20,6 +29,21 @@ export interface StationArrival {
   destination: string;
   minutes: number;
   platform: string;
+}
+
+export interface GtfsStation {
+  stopId: string;
+  sourceStopId: string;
+  code: string;
+  lineId: LineId;
+  lineKey: StationLineKey;
+  name: string;
+  latitude: number;
+  longitude: number;
+  sequence: number;
+  structure: string;
+  district: string;
+  connections: string;
 }
 
 export interface NearbyStation {

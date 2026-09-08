@@ -4,11 +4,11 @@ import dynamic from 'next/dynamic';
 import useSWR from 'swr';
 import type { LiveVehicle } from '@/app/api/transit/live-vehicles/route';
 
-const KtmLiveMap = dynamic(() => import('@/components/KtmLiveMap'), {
+const GoogleTransitMap = dynamic(() => import('@/components/GoogleTransitMap'), {
   ssr: false,
   loading: () => (
     <div className="flex h-[460px] items-center justify-center rounded-md bg-elevated/40 text-sm text-ink-secondary">
-      Loading map…
+      Loading Google Maps…
     </div>
   ),
 });
@@ -45,7 +45,7 @@ export default function MapPage() {
 
       <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_320px]">
         <div className="overflow-hidden rounded-lg border border-hairline bg-surface p-2">
-          <KtmLiveMap vehicles={vehicles ?? []} />
+          <GoogleTransitMap vehicles={vehicles ?? []} />
         </div>
 
         <div className="space-y-3">

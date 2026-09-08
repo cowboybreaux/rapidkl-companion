@@ -10,24 +10,25 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // RapidKL civic palette: paper-white surfaces, aqua elevation, navy structure.
-        base: '#F1EAEE',
+        // Urban daylight palette: crisp blue-whites with a vivid civic accent.
+        // Rail line colors below remain independent wayfinding tokens.
+        base: '#F4F8FC',
         surface: '#FFFFFF',
-        elevated: '#A8DADC',
-        hairline: '#457B9D',
-        accent: '#9B1B30',
+        elevated: '#E5F0FC',
+        hairline: '#B8CAE0',
+        accent: '#006DCC',
         ink: {
-          primary: '#1B3A57',
-          secondary: '#457B9D',
-          tertiary: '#9B1B30',
+          primary: '#102A43',
+          secondary: '#3D5F7A',
+          tertiary: '#6B8298',
         },
         line: {
-          kelana: '#2F6FED',
-          ampang: '#F2994A',
-          mrt: '#2FB380',
-          monorail: '#F2C94C',
-          ktm: '#E0475A',
-          putrajaya: '#7C5CFC',
+          kelana: '#E91E8C',
+          ampang: '#D99A35',
+          mrt: '#087A55',
+          monorail: '#23C875',
+          ktm: '#F23D4F',
+          putrajaya: '#F4C430',
         },
         severity: {
           critical: '#E0475A',

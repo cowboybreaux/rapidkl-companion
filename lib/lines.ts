@@ -13,7 +13,7 @@ interface LineMeta {
 // line's color always means the same thing everywhere in the app.
 export const LINE_META: Record<LineId, LineMeta> = {
   kelana: {
-    code: 'KJL',
+    code: 'KJ',
     name: 'Kelana Jaya Line',
     badgeBg: 'bg-line-kelana/15',
     badgeText: 'text-line-kelana',
@@ -29,7 +29,7 @@ export const LINE_META: Record<LineId, LineMeta> = {
     leftBorder: 'border-l-line-ampang',
   },
   mrt: {
-    code: 'MRT',
+    code: 'KG',
     name: 'Kajang Line',
     badgeBg: 'bg-line-mrt/15',
     badgeText: 'text-line-mrt',
@@ -53,7 +53,7 @@ export const LINE_META: Record<LineId, LineMeta> = {
     leftBorder: 'border-l-line-ktm',
   },
   putrajaya: {
-    code: 'PYL',
+    code: 'PY',
     name: 'Putrajaya Line',
     badgeBg: 'bg-line-putrajaya/15',
     badgeText: 'text-line-putrajaya',
@@ -61,3 +61,13 @@ export const LINE_META: Record<LineId, LineMeta> = {
     leftBorder: 'border-l-line-putrajaya',
   },
 };
+
+export function lineIdForStopId(stopId: string): LineId {
+  const prefix = stopId.trim().toUpperCase();
+  if (prefix.startsWith('KJ')) return 'kelana';
+  if (prefix.startsWith('AG') || prefix.startsWith('SP')) return 'ampang';
+  if (prefix.startsWith('KG')) return 'mrt';
+  if (prefix.startsWith('MR')) return 'monorail';
+  if (prefix.startsWith('PY')) return 'putrajaya';
+  return 'ktm';
+}
