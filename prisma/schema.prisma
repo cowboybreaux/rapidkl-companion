@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Agency {
+  id       String  @id @map("agency_id")
+  name     String  @map("agency_name")
+  url      String? @map("agency_url")
+  timezone String  @map("agency_timezone")
+  routes   Route[]
+
+  @@map("agencies")
+}
+
+model Route {
+  id        String  @id @map("route_id")
+  agencyId  String? @map("agency_id")
+  shortName String? @map("route_short_name")
+  longName  String? @map("route_long_name")
+  type      Int     @map("route_type")
+  color     String? @map("route_color")
+  textColor String? @map("route_text_color")
+  agency    Agency? @relation(fields: [agencyId], references: [id])
+  trips     Trip[]
+
+  @@index([agencyId])
+  @@map("routes")
+}
+
+model Calendar {
+  serviceId String   @id @map("service_id")
+  monday    Boolean
+  tuesday   Boolean
+  wednesday Boolean
+  thursday  Boolean
+  friday    Boolean
+  saturday  Boolean
+  sunday    Boolean
+  startDate DateTime @map("start_date") @db.Date
+  endDate   DateTime @map("end_date") @db.Date
+  trips     Trip[]
+
+  @@index([startDate, endDate])
+  @@map("calendars")
+}
+
+model Stop {
+  id            String     @id @map("stop_id")
+  name          String     @map("stop_name")
+  latitude      Float?     @map("stop_lat")
+  longitude     Float?     @map("stop_lon")
+  parentStation String?    @map("parent_station")
+  stopTimes     StopTime[]
+
+  @@map("stops")
+}
+
+model Trip {
+  id          String     @id @map("trip_id")
+  routeId     String     @map("route_id")
+  serviceId   String     @map("service_id")
+  headsign    String?    @map("trip_headsign")
+  directionId Int?       @map("direction_id")
+  route       Route      @relation(fields: [routeId], references: [id])
+  calendar    Calendar   @relation(fields: [serviceId], references: [serviceId])
+  stopTimes   StopTime[]
+
+  @@index([serviceId])
+  @@index([routeId])
+  @@map("trips")
+}
+
+model StopTime {
+  tripId           String  @map("trip_id")
+  stopId           String  @map("stop_id")
+  stopSequence     Int     @map("stop_sequence")
+  arrivalTime      String  @map("arrival_time")
+  departureTime    String  @map("departure_time")
+  departureSeconds Int     @map("departure_seconds")
+  stopHeadsign     String? @map("stop_headsign")
+  trip             Trip    @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  stop             Stop    @relation(fields: [stopId], references: [id])
+
+  @@id([tripId, stopSequence])
+  @@index([stopId, departureTime])
+  @@index([stopId, departureSeconds])
+  @@map("stop_times")
+}
